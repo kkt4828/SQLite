@@ -134,6 +134,20 @@ data = pd.read_sql(query, connection)
 
 data
 
+### FIRST_VALUE()
+
+query = """ SELECT user_id, FIRST_VALUE(STRFTIME("%Y-%m-01", date)) 
+                                OVER(PARTITION BY user_id ORDER BY date) first_month,
+                           STRFTIME("%Y-%m-01", date) month
+                        FROM kt
+"""
+
+pd.read_sql(query, connection)
+
+### 이 예시에서  FIRST_VALUE(STRFTIME("%Y-%m-01", date)) OVER(PARTITION BY user_id ORDER BY date) first_month는 
+### user_id 별로 date순서에 따라 STRFTIME("%Y-%m-01", date)의 첫번째 값만 모두 출력하는 컬럼 생성
+
+
 ## subquery
 
 query = """SELECT   
