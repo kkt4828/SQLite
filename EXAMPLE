@@ -1,0 +1,124 @@
+import sqlite3
+import pandas as pd
+
+connection = sqlite3.connect('e-commerce.sqlite')
+
+# db 구성 확인
+
+query = " SELECT * FROM sqlite_master;"
+
+data = pd.read_sql(query, connection)
+
+data
+
+
+
+
+# CASE 문 예시
+
+query = """
+          SELECT CASE WHEN address IN ('Seoul', 'Incheon') THEN '수도권'
+                      WHEN address IN ('Busan', 'Daegu') THEN '경상권'
+                      WHEN address IN ('Daejeon') THEN '충청권'
+                      ELSE '없음' END AS region,
+                      COUNT(*) AS count,
+                      AVG(price) AS price_mean
+             FROM 'orders'
+             GROUP BY 1
+             
+             
+             """
+             
+             
+data = pd.read_sql(query, connection)
+
+data
+
+
+
+# 절댓값
+# ABS(값)
+
+query = " SELECT ABS(-10), ABS(10)"
+data = pd.read_sql(query, connection)
+data
+
+## 출력값은 모두 10
+
+
+# 반올림
+query = "SELECT ROUND(10.541), ROUND(10.541, 2)"
+data = pd.read_sql(query, connection)
+data
+## 출력값은 11, 10.54
+## ROUND(값, 숫자) 숫자에 해당되는 소수점 자리수까지 반올림
+
+# 랜덤값 생성
+query = "SELECT RANDOM()"
+pd.read_sql(query, connection)
+
+## 랜덤값 생성
+# 응용예시
+
+query = """
+        SELECT
+              id,
+              title,
+              price
+            FROM 'products'
+            ORDER BY RANDOM()
+        """
+        
+data = pd.read_sql(query, connection)
+
+data
+## id 별 상품명과 가격 출력
+## 정렬이 랜덤하게 된다
+
+# 날짜에서 특정부분만 문자열로 추출해주는 함수 SUBSTR
+# 예시
+
+query = """ 
+          SELECT
+            SUBSTR('2020-02-02', 1, 4) AS year, ## 2020년 2월 2일에서 첫번째글자부터 4글자만 출력 즉, 2020 출력
+            SUBSTR('2020-02-02', 6, 2) AS month, ## 02 출력
+        """
+
+data = pd.read_sql(query, connection)
+
+data
+
+
+# 문자 concat
+# 예시
+
+query = "SELECT 'he' || 'llo' AS word"
+
+data = pd.read_sql(query, connection)
+
+data
+
+## hello 출력
+
+
+
+# 특정문자 제거
+# TRIM, LTRIM, RTRIM, INSTR
+# 예시
+
+query = """ SELECT
+              TRIM('!!!주의!!!', '!'),
+              LTRIM('!!!주의!!!!!!', '!'),
+              RTRIME('!!!주의!!!!!!', '!'),
+              INSTR('!!!주의!!!!!!', '!')
+              
+        """
+        
+data = pd.read_sql(query, connection)
+
+data
+
+## TRIM은 양쪽에 !글자 삭제 --> '주의'
+## LTRIM은 왼쪽에 !글자 삭제 --> '주의!!!!!!'
+## RTRIM은 오른쪽에 !글자 삭제 --> '!!!주의'
+## INSTR은 느낌표가 처음 나오는 위치 --> 첫번째이므로 숫자 1 출력 
